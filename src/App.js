@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
+  const url = "http://localhost:8080/personas/listar";
+  const [todos, setTodos] = useState();
+
+  const fetchApi = async () => {
+    const response = await fetch(url);
+    const responseJSON = await response.json();
+    setTodos(responseJSON);
+  };
+
+  useEffect(() => {
+    fetchApi();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ul>
+        {!todos
+          ? "Cargando..."
+          : todos.map((todo, index) => {
+              return <li key={index}>{todo.nombre}</li>;
+            })}
+      </ul>
     </div>
   );
 }
